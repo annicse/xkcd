@@ -3,6 +3,10 @@ const Xkcd = {
     url: 'search.php',
     searchItems: '',
 
+    /**
+     * Gets comic by ID
+     * @param id
+     */
     getComicByID: (id) => {
         let formData = new FormData();
         formData.append('getComic', '1');
@@ -20,6 +24,10 @@ const Xkcd = {
             .catch(e => console.log('Error: ' + e))
     },
 
+    /**
+     * gets comic/s by search.
+     * @param searchQuery
+     */
     getComicBySearch: (searchQuery) => {
         let formData = new FormData();
         formData.append('getComic', '1');
@@ -36,7 +44,6 @@ const Xkcd = {
                 Xkcd.setComicHtml(res);
                 Xkcd.searchItems = res.other_result_ids;
                 let comicIDsArr = res.other_result_ids.split(',');
-                console.log(comicIDsArr.length);
                 if ( comicIDsArr.length > 1 ) {
                     document.getElementById('comic-nav').classList.add('active');
                 }
@@ -45,19 +52,30 @@ const Xkcd = {
             .catch(e => console.log('Error: ' + e))
     },
 
+    /**
+     * puts the status message
+     * @param msg
+     */
     putStatus: (msg) => {
         const statusMsgContainer = document.getElementById('status-msg');
         statusMsgContainer.innerHTML = msg;
     },
 
+    /**
+     * set comic data in the dom
+     * @param values
+     */
     setComicHtml: (values) => {
         const comicOutput = document.getElementById('comic-data');
         comicOutput.querySelector('header h2').innerHTML = values.safe_title;
         comicOutput.querySelector('img').setAttribute('src', values.img);
         comicOutput.querySelector('img').setAttribute('alt', values.safe_title);
-        comicOutput.querySelector('#transcript p').innerHTML = values.transcript;
+        comicOutput.querySelector('#transcript p').innerHTML = '<pre>' + values.transcript + '</pre>';
     },
 
+    /**
+     * next previous button. this works when search is used
+     */
     nextPrev: () => {
         const nextPrevButtons = document.querySelectorAll('#comic-nav nav a');
         const nextButton = document.querySelector('#comic-nav nav a.next');
@@ -74,19 +92,27 @@ const Xkcd = {
                     nextID;
 
                 nextID = parseInt(nextPageID);
-                Xkcd.getComicByID(comicIDsArr[nextID]);
-
-                if ( buttonType === 'next' ) {
-                    nextButton.setAttribute('data-nextPageID', nextID + 1 );
-                    prevButton.setAttribute('data-nextPageID', nextID - 1 );
+                if ( nextID < 0  || nextID >= comicIDsArr.length ) {
+                    alert('No more comic available!');
+                    return false;
                 } else {
-                    prevButton.setAttribute('data-nextPageID', nextID - 1);
-                    nextButton.setAttribute('data-nextPageID', nextID + 1);
+                    Xkcd.getComicByID(comicIDsArr[nextID]);
+
+                    if (buttonType === 'next') {
+                        nextButton.setAttribute('data-nextPageID', nextID + 1);
+                        prevButton.setAttribute('data-nextPageID', nextID - 1);
+                    } else {
+                        prevButton.setAttribute('data-nextPageID', nextID - 1);
+                        nextButton.setAttribute('data-nextPageID', nextID + 1);
+                    }
                 }
             });
         });
     },
 
+    /**
+     * Initial function
+     */
     init: () => {
         const srcBtn = document.getElementById('do-search');
         srcBtn.addEventListener( 'click', function(e) {

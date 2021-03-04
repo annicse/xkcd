@@ -1,7 +1,5 @@
-//document.addEventListener("DOMContentLoaded", function() {})
 import Xkcd from './xkcd';
 document.addEventListener("DOMContentLoaded", function() {
     Xkcd.init();
-    Xkcd.getComicByID(661);
+    Xkcd.getComicByID( Math.floor(Math.random() * 1000) + 1 );
 })
-//

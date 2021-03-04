@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>XKCD</title>
+	<title>XKCD comic loader</title>
 	<script type="text/javascript" src="assets/build/js/main.js"></script>
 	<link rel="stylesheet" href="assets/build/css/main.css">
 </head>
 <body>
 	<header>
-		<h1>XKCD</h1>
+		<h1>My XKCD comics</h1>
 	</header>
 
 	<main>

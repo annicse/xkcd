@@ -1,9 +1,14 @@
 <?php
 
+/**
+ * Class Xkcd
+ * Main class for fetching comics
+ */
 class Xkcd {
-	private $view_path = './views/';
-	private $show_next_prev = false;
-
+	/**
+	 * @param $url
+	 * @return bool|string
+	 */
 	private function fetch_data_from_url($url) {
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -14,6 +19,10 @@ class Xkcd {
 		return $result;
 	}
 
+	/**
+	 * @param null $cid
+	 * @return bool|string
+	 */
 	public function get_comic($cid = null) {
 		$comic_url = 'https://xkcd.com/' . $cid . '/info.0.json';
 		$comic = $this->fetch_data_from_url($comic_url);
@@ -21,6 +30,10 @@ class Xkcd {
 		//include_once $this->view_path . 'comic.php';
 	}
 
+	/**
+	 * @param $search_query
+	 * @return false|string
+	 */
 	public function search_comic($search_query) {
 		$comic_url = 'https://relevantxkcd.appspot.com/process?action=xkcd&query='. $search_query;
 		$relevant_comic = $this->fetch_data_from_url($comic_url);
